@@ -12,6 +12,8 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     List<Location> findByActiveTrue();
 
+    List<Location> findByActiveFalse();
+
     Optional<Location> findByIdAndActiveTrue(Long id);
 
     List<Location> findByCity(String city);

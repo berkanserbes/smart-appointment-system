@@ -12,6 +12,8 @@ public interface ServiceProviderRepository extends JpaRepository<ServiceProvider
 
     List<ServiceProvider> findByActiveTrue();
 
+    List<ServiceProvider> findByActiveFalse();
+
     Optional<ServiceProvider> findByIdAndActiveTrue(Long id);
 
     List<ServiceProvider> findByCategoryId(Long categoryId);
