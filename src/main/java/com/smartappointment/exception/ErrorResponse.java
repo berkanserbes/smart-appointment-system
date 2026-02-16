@@ -1,7 +1,10 @@
 package com.smartappointment.exception;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Builder;
 
@@ -12,5 +15,5 @@ public record ErrorResponse(
         String message,
         String path,
         LocalDateTime timestamp,
-        Map<String, String> validationErrors) {
+        @JsonInclude(JsonInclude.Include.NON_NULL) Map<String, List<String>> validationErrors) {
 }
