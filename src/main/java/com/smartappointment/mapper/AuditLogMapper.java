@@ -13,16 +13,15 @@ public class AuditLogMapper {
             return null;
         }
 
-        return AuditLogResponse.builder()
-                .id(auditLog.getId())
-                .userId(auditLog.getUser() != null ? auditLog.getUser().getId() : null)
-                .userEmail(auditLog.getUser() != null ? auditLog.getUser().getEmail() : null)
-                .action(auditLog.getAction())
-                .entityType(auditLog.getEntityType())
-                .entityId(auditLog.getEntityId())
-                .details(auditLog.getDetails())
-                .ipAddress(auditLog.getIpAddress())
-                .timestamp(auditLog.getTimestamp())
-                .build();
+        return new AuditLogResponse(
+                auditLog.getId(),
+                auditLog.getUser() != null ? auditLog.getUser().getId() : null,
+                auditLog.getUser() != null ? auditLog.getUser().getEmail() : null,
+                auditLog.getAction(),
+                auditLog.getEntityType(),
+                auditLog.getEntityId(),
+                auditLog.getDetails(),
+                auditLog.getIpAddress(),
+                auditLog.getTimestamp());
     }
 }
