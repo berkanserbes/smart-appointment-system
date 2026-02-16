@@ -1,31 +1,34 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.provider.ServiceProviderRequest;
-import com.smartappointment.dto.provider.ServiceProviderResponse;
+import com.smartappointment.dto.provider.requests.CreateServiceProviderRequest;
+import com.smartappointment.dto.provider.requests.UpdateServiceProviderRequest;
+import com.smartappointment.dto.provider.responses.ServiceProviderDetailResponse;
+import com.smartappointment.dto.provider.responses.ServiceProviderResponse;
+import com.smartappointment.dto.provider.responses.ServiceProviderSummaryResponse;
 
 import java.util.List;
 
 public interface IServiceProviderService {
 
-    ServiceProviderResponse createProvider(ServiceProviderRequest request);
+    ServiceProviderResponse createProvider(CreateServiceProviderRequest request);
 
-    List<ServiceProviderResponse> getAllProviders();
+    List<ServiceProviderSummaryResponse> getAllProviders();
 
-    List<ServiceProviderResponse> getActiveProviders();
+    List<ServiceProviderSummaryResponse> getActiveProviders();
 
-    List<ServiceProviderResponse> getInactiveProviders();
+    List<ServiceProviderSummaryResponse> getInactiveProviders();
 
-    ServiceProviderResponse getProviderById(Long id);
+    ServiceProviderDetailResponse getProviderById(Long id);
 
-    List<ServiceProviderResponse> getProvidersByCategory(Long categoryId);
+    List<ServiceProviderSummaryResponse> getProvidersByCategory(Long categoryId);
 
-    List<ServiceProviderResponse> getActiveProvidersByCategory(Long categoryId);
+    List<ServiceProviderSummaryResponse> getActiveProvidersByCategory(Long categoryId);
 
-    List<ServiceProviderResponse> searchProvidersByName(String name);
+    List<ServiceProviderSummaryResponse> searchProvidersByName(String name);
 
     boolean existsByEmail(String email);
 
-    ServiceProviderResponse updateProvider(Long id, ServiceProviderRequest request);
+    ServiceProviderResponse updateProvider(Long id, UpdateServiceProviderRequest request);
 
     void softDeleteProvider(Long id);
 

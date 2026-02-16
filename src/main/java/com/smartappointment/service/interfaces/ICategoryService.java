@@ -2,12 +2,13 @@ package com.smartappointment.service.interfaces;
 
 import java.util.List;
 
-import com.smartappointment.dto.category.CategoryRequest;
-import com.smartappointment.dto.category.CategoryResponse;
+import com.smartappointment.dto.category.requests.CreateCategoryRequest;
+import com.smartappointment.dto.category.requests.UpdateCategoryRequest;
+import com.smartappointment.dto.category.responses.CategoryResponse;
 
 public interface ICategoryService {
 
-    CategoryResponse createCategory(CategoryRequest request);
+    CategoryResponse createCategory(CreateCategoryRequest request);
 
     List<CategoryResponse> getAllCategories();
 
@@ -19,7 +20,7 @@ public interface ICategoryService {
 
     boolean existsByName(String name);
 
-    CategoryResponse updateCategory(Long id, CategoryRequest request);
+    CategoryResponse updateCategory(Long id, UpdateCategoryRequest request);
 
     void softDeleteCategory(Long id);
 

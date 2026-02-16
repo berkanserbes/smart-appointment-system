@@ -1,6 +1,6 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.audit.AuditLogResponse;
+import com.smartappointment.dto.audit.responses.AuditLogResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

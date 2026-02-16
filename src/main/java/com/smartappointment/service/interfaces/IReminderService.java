@@ -1,12 +1,15 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.reminder.ReminderResponse;
+import com.smartappointment.dto.reminder.requests.CreateReminderRequest;
+import com.smartappointment.dto.reminder.responses.ReminderResponse;
 import com.smartappointment.model.enums.ReminderStatus;
 import com.smartappointment.model.enums.ReminderType;
 
 import java.util.List;
 
 public interface IReminderService {
+
+    ReminderResponse createReminder(CreateReminderRequest request);
 
     void processReminders();
 

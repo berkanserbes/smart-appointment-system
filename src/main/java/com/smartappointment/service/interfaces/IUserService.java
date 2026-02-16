@@ -1,7 +1,8 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.user.UserResponse;
-import com.smartappointment.dto.user.UserUpdateRequest;
+import com.smartappointment.dto.user.requests.ChangePasswordRequest;
+import com.smartappointment.dto.user.requests.UpdateUserRequest;
+import com.smartappointment.dto.user.responses.UserResponse;
 
 import java.util.List;
 
@@ -15,13 +16,17 @@ public interface IUserService {
 
     List<UserResponse> getUsersByRole(String role);
 
+    List<UserResponse> getActiveUsersByRole(String role);
+
+    List<UserResponse> searchUsersByName(String keyword);
+
     UserResponse getUserById(Long id);
 
     UserResponse getUserByEmail(String email);
 
-    UserResponse updateUser(Long id, UserUpdateRequest request);
+    UserResponse updateUser(Long id, UpdateUserRequest request);
 
-    void changePassword(Long id, String currentPassword, String newPassword);
+    void changePassword(Long id, ChangePasswordRequest request);
 
     void softDeleteUser(Long id);
 
@@ -30,4 +35,10 @@ public interface IUserService {
     void deactivateUser(Long id);
 
     void activateUser(Long id);
+
+    long countActiveUsers();
+
+    long countInactiveUsers();
+
+    long countUsersByRole(String role);
 }

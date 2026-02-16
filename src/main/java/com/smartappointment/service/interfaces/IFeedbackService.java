@@ -1,13 +1,14 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.feedback.FeedbackRequest;
-import com.smartappointment.dto.feedback.FeedbackResponse;
+import com.smartappointment.dto.feedback.requests.CreateFeedbackRequest;
+import com.smartappointment.dto.feedback.requests.UpdateFeedbackRequest;
+import com.smartappointment.dto.feedback.responses.FeedbackResponse;
 
 import java.util.List;
 
 public interface IFeedbackService {
 
-    FeedbackResponse createFeedback(String userEmail, FeedbackRequest request);
+    FeedbackResponse createFeedback(String userEmail, CreateFeedbackRequest request);
 
     FeedbackResponse getFeedbackById(Long id);
 
@@ -25,7 +26,7 @@ public interface IFeedbackService {
 
     boolean existsByAppointmentId(Long appointmentId);
 
-    FeedbackResponse updateFeedback(Long id, String userEmail, FeedbackRequest request);
+    FeedbackResponse updateFeedback(Long id, String userEmail, UpdateFeedbackRequest request);
 
     void deleteFeedback(Long id);
 }

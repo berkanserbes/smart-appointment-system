@@ -1,6 +1,6 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.report.ReportResponse;
+import com.smartappointment.dto.report.responses.ReportResponse;
 
 import java.time.LocalDateTime;
 

@@ -1,7 +1,8 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.appointment.AppointmentRequest;
-import com.smartappointment.dto.appointment.AppointmentResponse;
+import com.smartappointment.dto.appointment.requests.CreateAppointmentRequest;
+import com.smartappointment.dto.appointment.requests.UpdateAppointmentRequest;
+import com.smartappointment.dto.appointment.responses.AppointmentResponse;
 import com.smartappointment.model.enums.AppointmentStatus;
 
 import java.time.LocalDateTime;
@@ -10,11 +11,11 @@ import java.util.List;
 public interface IAppointmentService {
 
     // CRUD
-    AppointmentResponse createAppointment(String userEmail, AppointmentRequest request);
+    AppointmentResponse createAppointment(String userEmail, CreateAppointmentRequest request);
 
     AppointmentResponse getAppointmentById(Long id);
 
-    AppointmentResponse updateAppointment(Long id, AppointmentRequest request);
+    AppointmentResponse updateAppointment(Long id, UpdateAppointmentRequest request);
 
     void deleteAppointment(Long id);
 
