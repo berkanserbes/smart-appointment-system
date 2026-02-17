@@ -28,8 +28,6 @@ public interface IUserService {
 
     void changePassword(Long id, ChangePasswordRequest request);
 
-    void softDeleteUser(Long id);
-
     void hardDeleteUser(Long id);
 
     void deactivateUser(Long id);
