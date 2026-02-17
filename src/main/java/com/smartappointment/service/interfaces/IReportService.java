@@ -1,8 +1,9 @@
 package com.smartappointment.service.interfaces;
 
-import com.smartappointment.dto.report.responses.ReportResponse;
-
 import java.time.LocalDateTime;
+
+import com.smartappointment.dto.report.responses.ProviderReportResponse;
+import com.smartappointment.dto.report.responses.ReportResponse;
 
 public interface IReportService {
 
@@ -16,5 +17,5 @@ public interface IReportService {
 
     ReportResponse getCustomReport(LocalDateTime start, LocalDateTime end);
 
-    ReportResponse getProviderReport(Long providerId, LocalDateTime start, LocalDateTime end);
+    ProviderReportResponse getProviderReport(Long providerId, LocalDateTime start, LocalDateTime end);
 }
