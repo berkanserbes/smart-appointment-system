@@ -1,25 +1,23 @@
 package com.smartappointment.controller;
 
-import com.smartappointment.config.swagger.ApiResponseAnnotations.CreatedResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.DeleteResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.GetResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.StandardResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.UpdateResponses;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
 import com.smartappointment.dto.provider.requests.CreateServiceProviderRequest;
 import com.smartappointment.dto.provider.requests.UpdateServiceProviderRequest;
 import com.smartappointment.dto.provider.responses.ServiceProviderDetailResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderSummaryResponse;
 import com.smartappointment.service.impl.ServiceProviderService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/providers")

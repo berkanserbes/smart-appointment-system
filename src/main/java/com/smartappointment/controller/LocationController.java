@@ -1,23 +1,21 @@
 package com.smartappointment.controller;
 
-import com.smartappointment.config.swagger.ApiResponseAnnotations.CreatedResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.DeleteResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.GetResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.StandardResponses;
-import com.smartappointment.config.swagger.ApiResponseAnnotations.UpdateResponses;
-import com.smartappointment.dto.location.requests.CreateLocationRequest;
-import com.smartappointment.dto.location.requests.UpdateLocationRequest;
-import com.smartappointment.dto.location.responses.LocationResponse;
-import com.smartappointment.service.impl.LocationService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
+import com.smartappointment.dto.location.requests.CreateLocationRequest;
+import com.smartappointment.dto.location.requests.UpdateLocationRequest;
+import com.smartappointment.dto.location.responses.LocationResponse;
+import com.smartappointment.service.impl.LocationService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/locations")
