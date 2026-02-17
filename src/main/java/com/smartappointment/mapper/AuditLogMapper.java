@@ -4,9 +4,22 @@ import org.springframework.stereotype.Component;
 
 import com.smartappointment.dto.audit.responses.AuditLogResponse;
 import com.smartappointment.model.entity.AuditLog;
+import com.smartappointment.model.entity.User;
 
 @Component
 public class AuditLogMapper {
+
+    public AuditLog toEntity(User user, String action, String entityType, Long entityId, String details,
+            String ipAddress) {
+        return AuditLog.builder()
+                .user(user)
+                .action(action)
+                .entityType(entityType)
+                .entityId(entityId)
+                .details(details)
+                .ipAddress(ipAddress)
+                .build();
+    }
 
     public AuditLogResponse toResponse(AuditLog auditLog) {
         if (auditLog == null) {
