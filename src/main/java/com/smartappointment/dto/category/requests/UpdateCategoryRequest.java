@@ -12,4 +12,10 @@ public record UpdateCategoryRequest(
         @Size(max = 7, message = "Color code cannot exceed 7 characters") String colorCode,
 
         Integer defaultDurationMinutes) {
+
+        public UpdateCategoryRequest {
+                if (defaultDurationMinutes == null) {
+                        defaultDurationMinutes = 30;
+                }
+        }
 }
