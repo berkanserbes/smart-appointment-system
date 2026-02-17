@@ -1,7 +1,6 @@
 package com.smartappointment.dto.auth.responses;
 
-public record AuthResponse(
-        String token,
+public record RegisterResponse(
         String email,
         String role,
         String fullName) {
