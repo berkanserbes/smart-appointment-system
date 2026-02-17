@@ -1,14 +1,15 @@
 package com.smartappointment.repository;
 
-import com.smartappointment.model.entity.Appointment;
-import com.smartappointment.model.enums.AppointmentStatus;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.smartappointment.model.entity.Appointment;
+import com.smartappointment.model.enums.AppointmentStatus;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -62,6 +63,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         @Query("SELECT a FROM Appointment a WHERE a.startTime BETWEEN :start AND :end ORDER BY a.startTime")
         List<Appointment> findByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
+        long countByStartTimeBetween(LocalDateTime start, LocalDateTime end);
+
         @Query("SELECT COUNT(a) FROM Appointment a WHERE a.startTime BETWEEN :start AND :end AND a.status = :status")
         long countByDateRangeAndStatus(
                         @Param("start") LocalDateTime start,
@@ -73,6 +76,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                         @Param("providerId") Long providerId,
                         @Param("start") LocalDateTime start,
                         @Param("end") LocalDateTime end);
+
+        long countByServiceProviderIdAndStartTimeBetween(Long providerId, LocalDateTime start, LocalDateTime end);
+
+        @Query("SELECT COUNT(a) FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime BETWEEN :start AND :end AND a.status = :status")
+        long countByProviderIdAndDateRangeAndStatus(
+                        @Param("providerId") Long providerId,
+                        @Param("start") LocalDateTime start,
+                        @Param("end") LocalDateTime end,
+                        @Param("status") AppointmentStatus status);
 
         // ==================== Conflict detection ====================
 
