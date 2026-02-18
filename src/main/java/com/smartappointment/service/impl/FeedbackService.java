@@ -1,8 +1,7 @@
 package com.smartappointment.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,26 +81,19 @@ public class FeedbackService implements IFeedbackService {
     }
 
     @Override
-    public List<FeedbackResponse> getUserFeedbacks(String userEmail) {
+    public Page<FeedbackResponse> getUserFeedbacks(String userEmail, Pageable pageable) {
         User user = findUserByEmailOrThrow(userEmail);
-
-        return feedbackRepository.findByUserId(user.getId()).stream()
-            .map(feedbackMapper::toResponse)
-                .collect(Collectors.toList());
+        return feedbackRepository.findByUserId(user.getId(), pageable).map(feedbackMapper::toResponse);
     }
 
     @Override
-    public List<FeedbackResponse> getFeedbacksByProviderId(Long providerId) {
-        return feedbackRepository.findByProviderId(providerId).stream()
-                .map(feedbackMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<FeedbackResponse> getFeedbacksByProviderId(Long providerId, Pageable pageable) {
+        return feedbackRepository.findByProviderId(providerId, pageable).map(feedbackMapper::toResponse);
     }
 
     @Override
-    public List<FeedbackResponse> getFeedbacksByMinRating(int minRating) {
-        return feedbackRepository.findByRatingGreaterThanEqual(minRating).stream()
-                .map(feedbackMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<FeedbackResponse> getFeedbacksByMinRating(int minRating, Pageable pageable) {
+        return feedbackRepository.findByRatingGreaterThanEqual(minRating, pageable).map(feedbackMapper::toResponse);
     }
 
     @Override

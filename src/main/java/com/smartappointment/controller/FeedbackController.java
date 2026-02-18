@@ -1,7 +1,7 @@
 package com.smartappointment.controller;
 
-import java.util.List;
-
+import com.smartappointment.dto.common.PagedResponse;
+import com.smartappointment.util.PaginationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartappointment.config.swagger.ApiResponseAnnotations.CreatedResponses;
@@ -55,8 +56,12 @@ public class FeedbackController {
     @GetMapping
     @Operation(summary = "Get my feedbacks", description = "Retrieves all feedbacks created by the current user")
     @StandardResponses
-    public ResponseEntity<List<FeedbackResponse>> getMyFeedbacks(Authentication authentication) {
-        return ResponseEntity.ok(feedbackService.getUserFeedbacks(authentication.getName()));
+    public ResponseEntity<PagedResponse<FeedbackResponse>> getMyFeedbacks(
+            Authentication authentication,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                feedbackService.getUserFeedbacks(authentication.getName(), PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/{id}")
@@ -83,8 +88,12 @@ public class FeedbackController {
     @GetMapping("/provider/{providerId}")
     @Operation(summary = "Get provider feedbacks", description = "Retrieves all feedbacks for a specific service provider")
     @StandardResponses
-    public ResponseEntity<List<FeedbackResponse>> getFeedbacksByProvider(@PathVariable Long providerId) {
-        return ResponseEntity.ok(feedbackService.getFeedbacksByProviderId(providerId));
+    public ResponseEntity<PagedResponse<FeedbackResponse>> getFeedbacksByProvider(
+            @PathVariable Long providerId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                feedbackService.getFeedbacksByProviderId(providerId, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/provider/{providerId}/average")
@@ -97,8 +106,12 @@ public class FeedbackController {
     @GetMapping("/min-rating/{minRating}")
     @Operation(summary = "Get feedbacks by minimum rating", description = "Retrieves all feedbacks with rating greater than or equal to specified value")
     @StandardResponses
-    public ResponseEntity<List<FeedbackResponse>> getFeedbacksByMinRating(@PathVariable int minRating) {
-        return ResponseEntity.ok(feedbackService.getFeedbacksByMinRating(minRating));
+    public ResponseEntity<PagedResponse<FeedbackResponse>> getFeedbacksByMinRating(
+            @PathVariable int minRating,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                feedbackService.getFeedbacksByMinRating(minRating, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @PutMapping("/{id}")
