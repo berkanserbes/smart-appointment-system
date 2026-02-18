@@ -1,26 +1,27 @@
 package com.smartappointment.repository;
 
 import com.smartappointment.model.entity.ServiceProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ServiceProviderRepository extends JpaRepository<ServiceProvider, Long> {
 
-    List<ServiceProvider> findByActiveTrue();
+    Page<ServiceProvider> findByActiveTrue(Pageable pageable);
 
-    List<ServiceProvider> findByActiveFalse();
+    Page<ServiceProvider> findByActiveFalse(Pageable pageable);
 
     Optional<ServiceProvider> findByIdAndActiveTrue(Long id);
 
-    List<ServiceProvider> findByCategoryId(Long categoryId);
+    Page<ServiceProvider> findByCategoryId(Long categoryId, Pageable pageable);
 
-    List<ServiceProvider> findByCategoryIdAndActiveTrue(Long categoryId);
+    Page<ServiceProvider> findByCategoryIdAndActiveTrue(Long categoryId, Pageable pageable);
 
-    List<ServiceProvider> findByNameContainingIgnoreCase(String name);
+    Page<ServiceProvider> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     boolean existsByEmail(String email);
 

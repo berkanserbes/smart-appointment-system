@@ -1,8 +1,7 @@
 package com.smartappointment.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,49 +33,37 @@ public class UserService implements IUserService {
     // ==================== GET OPERATIONS ====================
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::toResponse);
     }
 
     @Override
-    public List<UserResponse> getActiveUsers() {
-        return userRepository.findByActiveTrue().stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> getActiveUsers(Pageable pageable) {
+        return userRepository.findByActiveTrue(pageable).map(userMapper::toResponse);
     }
 
     @Override
-    public List<UserResponse> getInactiveUsers() {
-        return userRepository.findByActiveFalse().stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<UserResponse> getInactiveUsers(Pageable pageable) {
+        return userRepository.findByActiveFalse(pageable).map(userMapper::toResponse);
     }
 
     @Override
-    public List<UserResponse> getUsersByRole(String role) {
+    public Page<UserResponse> getUsersByRole(String role, Pageable pageable) {
         Role roleEnum = parseRole(role);
-        return userRepository.findByRole(roleEnum).stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+        return userRepository.findByRole(roleEnum, pageable).map(userMapper::toResponse);
     }
 
     @Override
-    public List<UserResponse> getActiveUsersByRole(String role) {
+    public Page<UserResponse> getActiveUsersByRole(String role, Pageable pageable) {
         Role roleEnum = parseRole(role);
-        return userRepository.findByRoleAndActiveTrue(roleEnum).stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+        return userRepository.findByRoleAndActiveTrue(roleEnum, pageable).map(userMapper::toResponse);
     }
 
     @Override
-    public List<UserResponse> searchUsersByName(String keyword) {
+    public Page<UserResponse> searchUsersByName(String keyword, Pageable pageable) {
         return userRepository
-                .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(keyword, keyword)
-                .stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
+                .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(keyword, keyword, pageable)
+                .map(userMapper::toResponse);
     }
 
     @Override

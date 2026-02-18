@@ -1,8 +1,7 @@
 package com.smartappointment.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,24 +57,18 @@ public class ServiceProviderService implements IServiceProviderService {
     // ==================== GET OPERATIONS ====================
 
     @Override
-    public List<ServiceProviderSummaryResponse> getAllProviders() {
-        return providerRepository.findAll().stream()
-                .map(serviceProviderMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public Page<ServiceProviderSummaryResponse> getAllProviders(Pageable pageable) {
+        return providerRepository.findAll(pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override
-    public List<ServiceProviderSummaryResponse> getActiveProviders() {
-        return providerRepository.findByActiveTrue().stream()
-                .map(serviceProviderMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public Page<ServiceProviderSummaryResponse> getActiveProviders(Pageable pageable) {
+        return providerRepository.findByActiveTrue(pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override
-    public List<ServiceProviderSummaryResponse> getInactiveProviders() {
-        return providerRepository.findByActiveFalse().stream()
-                .map(serviceProviderMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public Page<ServiceProviderSummaryResponse> getInactiveProviders(Pageable pageable) {
+        return providerRepository.findByActiveFalse(pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override
@@ -85,24 +78,18 @@ public class ServiceProviderService implements IServiceProviderService {
     }
 
     @Override
-    public List<ServiceProviderSummaryResponse> getProvidersByCategory(Long categoryId) {
-        return providerRepository.findByCategoryId(categoryId).stream()
-                .map(serviceProviderMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public Page<ServiceProviderSummaryResponse> getProvidersByCategory(Long categoryId, Pageable pageable) {
+        return providerRepository.findByCategoryId(categoryId, pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override
-    public List<ServiceProviderSummaryResponse> getActiveProvidersByCategory(Long categoryId) {
-        return providerRepository.findByCategoryIdAndActiveTrue(categoryId).stream()
-                .map(serviceProviderMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public Page<ServiceProviderSummaryResponse> getActiveProvidersByCategory(Long categoryId, Pageable pageable) {
+        return providerRepository.findByCategoryIdAndActiveTrue(categoryId, pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override
-    public List<ServiceProviderSummaryResponse> searchProvidersByName(String name) {
-        return providerRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(serviceProviderMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public Page<ServiceProviderSummaryResponse> searchProvidersByName(String name, Pageable pageable) {
+        return providerRepository.findByNameContainingIgnoreCase(name, pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override

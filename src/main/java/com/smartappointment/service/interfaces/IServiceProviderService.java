@@ -1,30 +1,31 @@
 package com.smartappointment.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.smartappointment.dto.provider.requests.CreateServiceProviderRequest;
 import com.smartappointment.dto.provider.requests.UpdateServiceProviderRequest;
 import com.smartappointment.dto.provider.responses.ServiceProviderDetailResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderSummaryResponse;
 
-import java.util.List;
-
 public interface IServiceProviderService {
 
     ServiceProviderResponse createProvider(CreateServiceProviderRequest request);
 
-    List<ServiceProviderSummaryResponse> getAllProviders();
+    Page<ServiceProviderSummaryResponse> getAllProviders(Pageable pageable);
 
-    List<ServiceProviderSummaryResponse> getActiveProviders();
+    Page<ServiceProviderSummaryResponse> getActiveProviders(Pageable pageable);
 
-    List<ServiceProviderSummaryResponse> getInactiveProviders();
+    Page<ServiceProviderSummaryResponse> getInactiveProviders(Pageable pageable);
 
     ServiceProviderDetailResponse getProviderById(Long id);
 
-    List<ServiceProviderSummaryResponse> getProvidersByCategory(Long categoryId);
+    Page<ServiceProviderSummaryResponse> getProvidersByCategory(Long categoryId, Pageable pageable);
 
-    List<ServiceProviderSummaryResponse> getActiveProvidersByCategory(Long categoryId);
+    Page<ServiceProviderSummaryResponse> getActiveProvidersByCategory(Long categoryId, Pageable pageable);
 
-    List<ServiceProviderSummaryResponse> searchProvidersByName(String name);
+    Page<ServiceProviderSummaryResponse> searchProvidersByName(String name, Pageable pageable);
 
     boolean existsByEmail(String email);
 
