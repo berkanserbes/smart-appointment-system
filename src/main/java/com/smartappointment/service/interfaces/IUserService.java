@@ -1,24 +1,25 @@
 package com.smartappointment.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.smartappointment.dto.user.requests.ChangePasswordRequest;
 import com.smartappointment.dto.user.requests.UpdateUserRequest;
 import com.smartappointment.dto.user.responses.UserResponse;
 
-import java.util.List;
-
 public interface IUserService {
 
-    List<UserResponse> getAllUsers();
+    Page<UserResponse> getAllUsers(Pageable pageable);
 
-    List<UserResponse> getActiveUsers();
+    Page<UserResponse> getActiveUsers(Pageable pageable);
 
-    List<UserResponse> getInactiveUsers();
+    Page<UserResponse> getInactiveUsers(Pageable pageable);
 
-    List<UserResponse> getUsersByRole(String role);
+    Page<UserResponse> getUsersByRole(String role, Pageable pageable);
 
-    List<UserResponse> getActiveUsersByRole(String role);
+    Page<UserResponse> getActiveUsersByRole(String role, Pageable pageable);
 
-    List<UserResponse> searchUsersByName(String keyword);
+    Page<UserResponse> searchUsersByName(String keyword, Pageable pageable);
 
     UserResponse getUserById(Long id);
 
