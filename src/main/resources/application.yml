@@ -5,6 +5,11 @@ spring:
   application:
     name: SmartAppointmentSystem
 
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:.env.${SPRING_PROFILES_ACTIVE:development}[.properties]
+
   # PostgreSQL
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:smart_appointment_db}
