@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.smartappointment.dto.audit.responses.AuditLogResponse;
@@ -40,7 +41,7 @@ public class AuditService implements IAuditService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void logAction(String userEmail, String action, String entityType, Long entityId, String details,
             String ipAddress) {
         String normalizedAction = normalize(action);
