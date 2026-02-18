@@ -1,8 +1,7 @@
 package com.smartappointment.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,24 +45,18 @@ public class LocationService implements ILocationService {
     // ==================== GET OPERATIONS ====================
 
     @Override
-    public List<LocationResponse> getAllLocations() {
-        return locationRepository.findAll().stream()
-                .map(locationMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LocationResponse> getAllLocations(Pageable pageable) {
+        return locationRepository.findAll(pageable).map(locationMapper::toResponse);
     }
 
     @Override
-    public List<LocationResponse> getActiveLocations() {
-        return locationRepository.findByActiveTrue().stream()
-                .map(locationMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LocationResponse> getActiveLocations(Pageable pageable) {
+        return locationRepository.findByActiveTrue(pageable).map(locationMapper::toResponse);
     }
 
     @Override
-    public List<LocationResponse> getInactiveLocations() {
-        return locationRepository.findByActiveFalse().stream()
-                .map(locationMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LocationResponse> getInactiveLocations(Pageable pageable) {
+        return locationRepository.findByActiveFalse(pageable).map(locationMapper::toResponse);
     }
 
     @Override
@@ -73,24 +66,18 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public List<LocationResponse> getLocationsByCity(String city) {
-        return locationRepository.findByCity(city).stream()
-                .map(locationMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LocationResponse> getLocationsByCity(String city, Pageable pageable) {
+        return locationRepository.findByCity(city, pageable).map(locationMapper::toResponse);
     }
 
     @Override
-    public List<LocationResponse> getActiveLocationsByCity(String city) {
-        return locationRepository.findByCityAndActiveTrue(city).stream()
-                .map(locationMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LocationResponse> getActiveLocationsByCity(String city, Pageable pageable) {
+        return locationRepository.findByCityAndActiveTrue(city, pageable).map(locationMapper::toResponse);
     }
 
     @Override
-    public List<LocationResponse> searchLocationsByName(String name) {
-        return locationRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(locationMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LocationResponse> searchLocationsByName(String name, Pageable pageable) {
+        return locationRepository.findByNameContainingIgnoreCase(name, pageable).map(locationMapper::toResponse);
     }
 
     @Override
