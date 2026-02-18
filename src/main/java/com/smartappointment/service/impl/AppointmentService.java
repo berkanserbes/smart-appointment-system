@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,9 +87,10 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentResponse> getUserAppointments(String userEmail) {
+    public Page<AppointmentResponse> getUserAppointments(String userEmail, Pageable pageable) {
         User user = findUserByEmailOrThrow(userEmail);
-        return appointmentMapper.toResponseList(appointmentRepository.findByUserIdOrderByStartTimeDesc(user.getId()));
+        return appointmentRepository.findByUserIdOrderByStartTimeDesc(user.getId(), pageable)
+                .map(appointmentMapper::toResponse);
     }
 
     @Override
@@ -97,8 +100,8 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentResponse> getAllAppointments() {
-        return appointmentMapper.toResponseList(appointmentRepository.findAll());
+    public Page<AppointmentResponse> getAllAppointments(Pageable pageable) {
+        return appointmentRepository.findAll(pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
@@ -246,32 +249,32 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentResponse> getAppointmentsByStatus(AppointmentStatus status) {
-        return appointmentMapper.toResponseList(appointmentRepository.findByStatus(status));
+    public Page<AppointmentResponse> getAppointmentsByStatus(AppointmentStatus status, Pageable pageable) {
+        return appointmentRepository.findByStatus(status, pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getAppointmentsByDateRange(LocalDateTime start, LocalDateTime end) {
+    public Page<AppointmentResponse> getAppointmentsByDateRange(LocalDateTime start, LocalDateTime end, Pageable pageable) {
         validateTimeRange(start, end);
-        return appointmentMapper.toResponseList(appointmentRepository.findByDateRange(start, end));
+        return appointmentRepository.findByDateRange(start, end, pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getUserAppointmentsByStatus(String userEmail, AppointmentStatus status) {
+    public Page<AppointmentResponse> getUserAppointmentsByStatus(String userEmail, AppointmentStatus status, Pageable pageable) {
         User user = findUserByEmailOrThrow(userEmail);
-        return appointmentMapper.toResponseList(appointmentRepository.findByUserIdAndStatus(user.getId(), status));
+        return appointmentRepository.findByUserIdAndStatus(user.getId(), status, pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getUpcomingUserAppointments(String userEmail) {
+    public Page<AppointmentResponse> getUpcomingUserAppointments(String userEmail, Pageable pageable) {
         User user = findUserByEmailOrThrow(userEmail);
-        return appointmentMapper.toResponseList(appointmentRepository.findUpcomingByUserId(user.getId(), LocalDateTime.now()));
+        return appointmentRepository.findUpcomingByUserId(user.getId(), LocalDateTime.now(), pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getPastUserAppointments(String userEmail) {
+    public Page<AppointmentResponse> getPastUserAppointments(String userEmail, Pageable pageable) {
         User user = findUserByEmailOrThrow(userEmail);
-        return appointmentMapper.toResponseList(appointmentRepository.findPastByUserId(user.getId(), LocalDateTime.now()));
+        return appointmentRepository.findPastByUserId(user.getId(), LocalDateTime.now(), pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
@@ -281,29 +284,29 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentResponse> getProviderAppointments(Long providerId) {
+    public Page<AppointmentResponse> getProviderAppointments(Long providerId, Pageable pageable) {
         findProviderOrThrow(providerId);
-        return appointmentMapper.toResponseList(appointmentRepository.findByServiceProviderIdOrderByStartTimeDesc(providerId));
+        return appointmentRepository.findByServiceProviderIdOrderByStartTimeDesc(providerId, pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getUpcomingProviderAppointments(Long providerId) {
+    public Page<AppointmentResponse> getUpcomingProviderAppointments(Long providerId, Pageable pageable) {
         findProviderOrThrow(providerId);
-        return appointmentMapper.toResponseList(appointmentRepository.findUpcomingByProviderId(providerId, LocalDateTime.now()));
+        return appointmentRepository.findUpcomingByProviderId(providerId, LocalDateTime.now(), pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getProviderAppointmentsByDateRange(Long providerId, LocalDateTime start,
-            LocalDateTime end) {
+    public Page<AppointmentResponse> getProviderAppointmentsByDateRange(Long providerId, LocalDateTime start,
+            LocalDateTime end, Pageable pageable) {
         findProviderOrThrow(providerId);
         validateTimeRange(start, end);
-        return appointmentMapper.toResponseList(appointmentRepository.findByProviderIdAndDateRange(providerId, start, end));
+        return appointmentRepository.findByProviderIdAndDateRange(providerId, start, end, pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
-    public List<AppointmentResponse> getLocationAppointments(Long locationId) {
+    public Page<AppointmentResponse> getLocationAppointments(Long locationId, Pageable pageable) {
         findLocationOrThrow(locationId);
-        return appointmentMapper.toResponseList(appointmentRepository.findByLocationId(locationId));
+        return appointmentRepository.findByLocationId(locationId, pageable).map(appointmentMapper::toResponse);
     }
 
     @Override

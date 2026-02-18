@@ -1,18 +1,19 @@
 package com.smartappointment.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
+import com.smartappointment.dto.common.PagedResponse;
 import com.smartappointment.dto.provider.requests.CreateServiceProviderRequest;
 import com.smartappointment.dto.provider.requests.UpdateServiceProviderRequest;
 import com.smartappointment.dto.provider.responses.ServiceProviderDetailResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderSummaryResponse;
 import com.smartappointment.service.interfaces.IServiceProviderService;
+import com.smartappointment.util.PaginationUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -42,22 +43,31 @@ public class ServiceProviderController {
     @GetMapping
     @Operation(summary = "Get all service providers", description = "Retrieves all service providers including inactive ones")
     @StandardResponses
-    public ResponseEntity<List<ServiceProviderSummaryResponse>> getAllProviders() {
-        return ResponseEntity.ok(providerService.getAllProviders());
+    public ResponseEntity<PagedResponse<ServiceProviderSummaryResponse>> getAllProviders(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(providerService.getAllProviders(pageable), page));
     }
 
     @GetMapping("/active")
     @Operation(summary = "Get active service providers", description = "Retrieves only active service providers")
     @StandardResponses
-    public ResponseEntity<List<ServiceProviderSummaryResponse>> getActiveProviders() {
-        return ResponseEntity.ok(providerService.getActiveProviders());
+    public ResponseEntity<PagedResponse<ServiceProviderSummaryResponse>> getActiveProviders(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(providerService.getActiveProviders(pageable), page));
     }
 
     @GetMapping("/inactive")
     @Operation(summary = "Get inactive service providers", description = "Retrieves only inactive service providers")
     @StandardResponses
-    public ResponseEntity<List<ServiceProviderSummaryResponse>> getInactiveProviders() {
-        return ResponseEntity.ok(providerService.getInactiveProviders());
+    public ResponseEntity<PagedResponse<ServiceProviderSummaryResponse>> getInactiveProviders(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(providerService.getInactiveProviders(pageable), page));
     }
 
     @GetMapping("/{id}")
@@ -70,25 +80,34 @@ public class ServiceProviderController {
     @GetMapping("/category/{categoryId}")
     @Operation(summary = "Get providers by category", description = "Retrieves all service providers in a specific category")
     @StandardResponses
-    public ResponseEntity<List<ServiceProviderSummaryResponse>> getProvidersByCategory(
-            @PathVariable Long categoryId) {
-        return ResponseEntity.ok(providerService.getProvidersByCategory(categoryId));
+    public ResponseEntity<PagedResponse<ServiceProviderSummaryResponse>> getProvidersByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(providerService.getProvidersByCategory(categoryId, pageable), page));
     }
 
     @GetMapping("/category/{categoryId}/active")
     @Operation(summary = "Get active providers by category", description = "Retrieves only active service providers in a specific category")
     @StandardResponses
-    public ResponseEntity<List<ServiceProviderSummaryResponse>> getActiveProvidersByCategory(
-            @PathVariable Long categoryId) {
-        return ResponseEntity.ok(providerService.getActiveProvidersByCategory(categoryId));
+    public ResponseEntity<PagedResponse<ServiceProviderSummaryResponse>> getActiveProvidersByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(providerService.getActiveProvidersByCategory(categoryId, pageable), page));
     }
 
     @GetMapping("/search")
     @Operation(summary = "Search providers by name", description = "Searches service providers by name keyword (case-insensitive)")
     @StandardResponses
-    public ResponseEntity<List<ServiceProviderSummaryResponse>> searchProvidersByName(
-            @RequestParam String keyword) {
-        return ResponseEntity.ok(providerService.searchProvidersByName(keyword));
+    public ResponseEntity<PagedResponse<ServiceProviderSummaryResponse>> searchProvidersByName(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(providerService.searchProvidersByName(keyword, pageable), page));
     }
 
     @GetMapping("/exists")
