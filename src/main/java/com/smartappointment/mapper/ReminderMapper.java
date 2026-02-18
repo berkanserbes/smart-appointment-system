@@ -1,5 +1,8 @@
 package com.smartappointment.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.smartappointment.dto.reminder.responses.ReminderResponse;
@@ -21,5 +24,13 @@ public class ReminderMapper {
                 reminder.getScheduledAt(),
                 reminder.getSentAt(),
                 reminder.getMessage());
+    }
+
+    public List<ReminderResponse> toResponseList(List<Reminder> reminders) {
+        if (reminders == null) {
+            return List.of();
+        }
+
+        return reminders.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }
