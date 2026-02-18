@@ -23,5 +23,5 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 
     List<AuditLog> findByTimestampBetweenOrderByTimestampDesc(LocalDateTime start, LocalDateTime end);
 
-    void deleteByTimestampBefore(LocalDateTime before);
+    long deleteByTimestampBefore(LocalDateTime before);
 }

@@ -1,5 +1,8 @@
 package com.smartappointment.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.smartappointment.dto.audit.responses.AuditLogResponse;
@@ -36,5 +39,13 @@ public class AuditLogMapper {
                 auditLog.getDetails(),
                 auditLog.getIpAddress(),
                 auditLog.getTimestamp());
+    }
+
+    public List<AuditLogResponse> toResponseList(List<AuditLog> auditLogs) {
+        if (auditLogs == null) {
+            return List.of();
+        }
+
+        return auditLogs.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }
