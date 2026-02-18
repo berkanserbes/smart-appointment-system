@@ -1,5 +1,13 @@
 package com.smartappointment.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
 import com.smartappointment.config.swagger.ApiResponseAnnotations.DeleteResponses;
 import com.smartappointment.config.swagger.ApiResponseAnnotations.GetResponses;
 import com.smartappointment.config.swagger.ApiResponseAnnotations.StandardResponses;
@@ -7,18 +15,12 @@ import com.smartappointment.config.swagger.ApiResponseAnnotations.UpdateResponse
 import com.smartappointment.dto.user.requests.ChangePasswordRequest;
 import com.smartappointment.dto.user.requests.UpdateUserRequest;
 import com.smartappointment.dto.user.responses.UserResponse;
-import com.smartappointment.service.impl.UserService;
+import com.smartappointment.service.interfaces.IUserService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,9 +28,9 @@ import java.util.Map;
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
-    private final UserService userService;
+    private final IUserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(IUserService userService) {
         this.userService = userService;
     }
 

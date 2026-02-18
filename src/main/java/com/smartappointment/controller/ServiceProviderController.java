@@ -12,7 +12,7 @@ import com.smartappointment.dto.provider.requests.UpdateServiceProviderRequest;
 import com.smartappointment.dto.provider.responses.ServiceProviderDetailResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderResponse;
 import com.smartappointment.dto.provider.responses.ServiceProviderSummaryResponse;
-import com.smartappointment.service.impl.ServiceProviderService;
+import com.smartappointment.service.interfaces.IServiceProviderService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,9 +25,9 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class ServiceProviderController {
 
-    private final ServiceProviderService providerService;
+    private final IServiceProviderService providerService;
 
-    public ServiceProviderController(ServiceProviderService providerService) {
+    public ServiceProviderController(IServiceProviderService providerService) {
         this.providerService = providerService;
     }
 

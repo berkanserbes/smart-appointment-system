@@ -10,7 +10,7 @@ import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
 import com.smartappointment.dto.category.requests.CreateCategoryRequest;
 import com.smartappointment.dto.category.requests.UpdateCategoryRequest;
 import com.smartappointment.dto.category.responses.CategoryResponse;
-import com.smartappointment.service.impl.CategoryService;
+import com.smartappointment.service.interfaces.ICategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,9 +23,9 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

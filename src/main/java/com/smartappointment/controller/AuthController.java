@@ -2,10 +2,7 @@ package com.smartappointment.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.smartappointment.config.swagger.ApiResponseAnnotations.LoginResponses;
 import com.smartappointment.config.swagger.ApiResponseAnnotations.RegisterResponses;
@@ -13,7 +10,7 @@ import com.smartappointment.dto.auth.requests.LoginRequest;
 import com.smartappointment.dto.auth.requests.RegisterRequest;
 import com.smartappointment.dto.auth.responses.LoginResponse;
 import com.smartappointment.dto.auth.responses.RegisterResponse;
-import com.smartappointment.service.impl.AuthService;
+import com.smartappointment.service.interfaces.IAuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,9 +21,9 @@ import jakarta.validation.Valid;
 @Tag(name = "Authentication", description = "User registration and login operations")
 public class AuthController {
 
-    private final AuthService authService;
+    private final IAuthService authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(IAuthService authService) {
         this.authService = authService;
     }
 

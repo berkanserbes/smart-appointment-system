@@ -10,7 +10,7 @@ import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
 import com.smartappointment.dto.location.requests.CreateLocationRequest;
 import com.smartappointment.dto.location.requests.UpdateLocationRequest;
 import com.smartappointment.dto.location.responses.LocationResponse;
-import com.smartappointment.service.impl.LocationService;
+import com.smartappointment.service.interfaces.ILocationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,9 +23,9 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class LocationController {
 
-    private final LocationService locationService;
+    private final ILocationService locationService;
 
-    public LocationController(LocationService locationService) {
+    public LocationController(ILocationService locationService) {
         this.locationService = locationService;
     }
 

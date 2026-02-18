@@ -2,19 +2,14 @@ package com.smartappointment.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.smartappointment.config.swagger.ApiResponseAnnotations.GetResponses;
 import com.smartappointment.config.swagger.ApiResponseAnnotations.StandardResponses;
 import com.smartappointment.dto.report.requests.ReportRequest;
 import com.smartappointment.dto.report.responses.ProviderReportResponse;
 import com.smartappointment.dto.report.responses.ReportResponse;
-import com.smartappointment.service.impl.ReportService;
+import com.smartappointment.service.interfaces.IReportService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,9 +23,9 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class ReportController {
 
-    private final ReportService reportService;
+    private final IReportService reportService;
 
-    public ReportController(ReportService reportService) {
+    public ReportController(IReportService reportService) {
         this.reportService = reportService;
     }
 
