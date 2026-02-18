@@ -1,8 +1,7 @@
 package com.smartappointment.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,10 +40,8 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll().stream()
-                .map(categoryMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<CategoryResponse> getAllCategories(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(categoryMapper::toResponse);
     }
 
     @Override
@@ -64,10 +61,8 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public List<CategoryResponse> getActiveCategories() {
-        return categoryRepository.findByActiveTrue().stream()
-                .map(categoryMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<CategoryResponse> getActiveCategories(Pageable pageable) {
+        return categoryRepository.findByActiveTrue(pageable).map(categoryMapper::toResponse);
     }
 
     @Override

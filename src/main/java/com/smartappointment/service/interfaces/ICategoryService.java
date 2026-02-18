@@ -1,6 +1,7 @@
 package com.smartappointment.service.interfaces;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.smartappointment.dto.category.requests.CreateCategoryRequest;
 import com.smartappointment.dto.category.requests.UpdateCategoryRequest;
@@ -10,9 +11,9 @@ public interface ICategoryService {
 
     CategoryResponse createCategory(CreateCategoryRequest request);
 
-    List<CategoryResponse> getAllCategories();
+    Page<CategoryResponse> getAllCategories(Pageable pageable);
 
-    List<CategoryResponse> getActiveCategories();
+    Page<CategoryResponse> getActiveCategories(Pageable pageable);
 
     CategoryResponse getCategoryById(Long id);
 
