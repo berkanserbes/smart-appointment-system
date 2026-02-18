@@ -1,12 +1,14 @@
 package com.smartappointment.service.interfaces;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.smartappointment.dto.appointment.requests.CreateAppointmentRequest;
 import com.smartappointment.dto.appointment.requests.UpdateAppointmentRequest;
 import com.smartappointment.dto.appointment.responses.AppointmentResponse;
 import com.smartappointment.model.enums.AppointmentStatus;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 public interface IAppointmentService {
 
@@ -31,33 +33,33 @@ public interface IAppointmentService {
     void markMissedAppointments();
 
     // All appointments (admin)
-    List<AppointmentResponse> getAllAppointments();
+    Page<AppointmentResponse> getAllAppointments(Pageable pageable);
 
-    List<AppointmentResponse> getAppointmentsByStatus(AppointmentStatus status);
+    Page<AppointmentResponse> getAppointmentsByStatus(AppointmentStatus status, Pageable pageable);
 
-    List<AppointmentResponse> getAppointmentsByDateRange(LocalDateTime start, LocalDateTime end);
+    Page<AppointmentResponse> getAppointmentsByDateRange(LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     // User-based queries
-    List<AppointmentResponse> getUserAppointments(String userEmail);
+    Page<AppointmentResponse> getUserAppointments(String userEmail, Pageable pageable);
 
-    List<AppointmentResponse> getUserAppointmentsByStatus(String userEmail, AppointmentStatus status);
+    Page<AppointmentResponse> getUserAppointmentsByStatus(String userEmail, AppointmentStatus status, Pageable pageable);
 
-    List<AppointmentResponse> getUpcomingUserAppointments(String userEmail);
+    Page<AppointmentResponse> getUpcomingUserAppointments(String userEmail, Pageable pageable);
 
-    List<AppointmentResponse> getPastUserAppointments(String userEmail);
+    Page<AppointmentResponse> getPastUserAppointments(String userEmail, Pageable pageable);
 
     long countUserAppointments(String userEmail);
 
     // Provider-based queries
-    List<AppointmentResponse> getProviderAppointments(Long providerId);
+    Page<AppointmentResponse> getProviderAppointments(Long providerId, Pageable pageable);
 
-    List<AppointmentResponse> getUpcomingProviderAppointments(Long providerId);
+    Page<AppointmentResponse> getUpcomingProviderAppointments(Long providerId, Pageable pageable);
 
-    List<AppointmentResponse> getProviderAppointmentsByDateRange(Long providerId, LocalDateTime start,
-            LocalDateTime end);
+    Page<AppointmentResponse> getProviderAppointmentsByDateRange(Long providerId, LocalDateTime start,
+            LocalDateTime end, Pageable pageable);
 
     // Location-based queries
-    List<AppointmentResponse> getLocationAppointments(Long locationId);
+    Page<AppointmentResponse> getLocationAppointments(Long locationId, Pageable pageable);
 
     // Conflict detection
     boolean hasProviderConflict(Long providerId, LocalDateTime startTime, LocalDateTime endTime);

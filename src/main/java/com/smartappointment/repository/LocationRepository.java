@@ -1,26 +1,27 @@
 package com.smartappointment.repository;
 
 import com.smartappointment.model.entity.Location;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    List<Location> findByActiveTrue();
+    Page<Location> findByActiveTrue(Pageable pageable);
 
-    List<Location> findByActiveFalse();
+    Page<Location> findByActiveFalse(Pageable pageable);
 
     Optional<Location> findByIdAndActiveTrue(Long id);
 
-    List<Location> findByCity(String city);
+    Page<Location> findByCity(String city, Pageable pageable);
 
-    List<Location> findByCityAndActiveTrue(String city);
+    Page<Location> findByCityAndActiveTrue(String city, Pageable pageable);
 
-    List<Location> findByNameContainingIgnoreCase(String name);
+    Page<Location> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     boolean existsByNameAndCity(String name, String city);
 }

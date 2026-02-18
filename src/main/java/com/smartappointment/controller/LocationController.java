@@ -1,16 +1,17 @@
 package com.smartappointment.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
+import com.smartappointment.dto.common.PagedResponse;
 import com.smartappointment.dto.location.requests.CreateLocationRequest;
 import com.smartappointment.dto.location.requests.UpdateLocationRequest;
 import com.smartappointment.dto.location.responses.LocationResponse;
 import com.smartappointment.service.interfaces.ILocationService;
+import com.smartappointment.util.PaginationUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -39,22 +40,31 @@ public class LocationController {
     @GetMapping
     @Operation(summary = "Get all locations", description = "Retrieves all locations including inactive ones")
     @StandardResponses
-    public ResponseEntity<List<LocationResponse>> getAllLocations() {
-        return ResponseEntity.ok(locationService.getAllLocations());
+    public ResponseEntity<PagedResponse<LocationResponse>> getAllLocations(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(locationService.getAllLocations(pageable), page));
     }
 
     @GetMapping("/active")
     @Operation(summary = "Get active locations", description = "Retrieves only active locations")
     @StandardResponses
-    public ResponseEntity<List<LocationResponse>> getActiveLocations() {
-        return ResponseEntity.ok(locationService.getActiveLocations());
+    public ResponseEntity<PagedResponse<LocationResponse>> getActiveLocations(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(locationService.getActiveLocations(pageable), page));
     }
 
     @GetMapping("/inactive")
     @Operation(summary = "Get inactive locations", description = "Retrieves only inactive locations")
     @StandardResponses
-    public ResponseEntity<List<LocationResponse>> getInactiveLocations() {
-        return ResponseEntity.ok(locationService.getInactiveLocations());
+    public ResponseEntity<PagedResponse<LocationResponse>> getInactiveLocations(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(locationService.getInactiveLocations(pageable), page));
     }
 
     @GetMapping("/{id}")
@@ -67,22 +77,34 @@ public class LocationController {
     @GetMapping("/city/{city}")
     @Operation(summary = "Get locations by city", description = "Retrieves all locations in a specific city")
     @StandardResponses
-    public ResponseEntity<List<LocationResponse>> getLocationsByCity(@PathVariable String city) {
-        return ResponseEntity.ok(locationService.getLocationsByCity(city));
+    public ResponseEntity<PagedResponse<LocationResponse>> getLocationsByCity(
+            @PathVariable String city,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(locationService.getLocationsByCity(city, pageable), page));
     }
 
     @GetMapping("/city/{city}/active")
     @Operation(summary = "Get active locations by city", description = "Retrieves only active locations in a specific city")
     @StandardResponses
-    public ResponseEntity<List<LocationResponse>> getActiveLocationsByCity(@PathVariable String city) {
-        return ResponseEntity.ok(locationService.getActiveLocationsByCity(city));
+    public ResponseEntity<PagedResponse<LocationResponse>> getActiveLocationsByCity(
+            @PathVariable String city,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(locationService.getActiveLocationsByCity(city, pageable), page));
     }
 
     @GetMapping("/search")
     @Operation(summary = "Search locations by name", description = "Searches locations by name keyword (case-insensitive)")
     @StandardResponses
-    public ResponseEntity<List<LocationResponse>> searchLocationsByName(@RequestParam String keyword) {
-        return ResponseEntity.ok(locationService.searchLocationsByName(keyword));
+    public ResponseEntity<PagedResponse<LocationResponse>> searchLocationsByName(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(locationService.searchLocationsByName(keyword, pageable), page));
     }
 
     @GetMapping("/exists")

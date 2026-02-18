@@ -1,28 +1,29 @@
 package com.smartappointment.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.smartappointment.dto.location.requests.CreateLocationRequest;
 import com.smartappointment.dto.location.requests.UpdateLocationRequest;
 import com.smartappointment.dto.location.responses.LocationResponse;
-
-import java.util.List;
 
 public interface ILocationService {
 
     LocationResponse createLocation(CreateLocationRequest request);
 
-    List<LocationResponse> getAllLocations();
+    Page<LocationResponse> getAllLocations(Pageable pageable);
 
-    List<LocationResponse> getActiveLocations();
+    Page<LocationResponse> getActiveLocations(Pageable pageable);
 
-    List<LocationResponse> getInactiveLocations();
+    Page<LocationResponse> getInactiveLocations(Pageable pageable);
 
     LocationResponse getLocationById(Long id);
 
-    List<LocationResponse> getLocationsByCity(String city);
+    Page<LocationResponse> getLocationsByCity(String city, Pageable pageable);
 
-    List<LocationResponse> getActiveLocationsByCity(String city);
+    Page<LocationResponse> getActiveLocationsByCity(String city, Pageable pageable);
 
-    List<LocationResponse> searchLocationsByName(String name);
+    Page<LocationResponse> searchLocationsByName(String name, Pageable pageable);
 
     boolean existsByNameAndCity(String name, String city);
 

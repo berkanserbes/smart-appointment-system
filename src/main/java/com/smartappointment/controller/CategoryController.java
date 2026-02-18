@@ -1,7 +1,6 @@
 package com.smartappointment.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +9,9 @@ import com.smartappointment.config.swagger.ApiResponseAnnotations.*;
 import com.smartappointment.dto.category.requests.CreateCategoryRequest;
 import com.smartappointment.dto.category.requests.UpdateCategoryRequest;
 import com.smartappointment.dto.category.responses.CategoryResponse;
+import com.smartappointment.dto.common.PagedResponse;
 import com.smartappointment.service.interfaces.ICategoryService;
+import com.smartappointment.util.PaginationUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -39,8 +40,11 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "Get all categories", description = "Retrieves all categories including inactive ones")
     @StandardResponses
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<PagedResponse<CategoryResponse>> getAllCategories(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(categoryService.getAllCategories(pageable), page));
     }
 
     @GetMapping("/{id}")
@@ -60,8 +64,11 @@ public class CategoryController {
     @GetMapping("/active")
     @Operation(summary = "Get active categories", description = "Retrieves only active categories")
     @StandardResponses
-    public ResponseEntity<List<CategoryResponse>> getActiveCategories() {
-        return ResponseEntity.ok(categoryService.getActiveCategories());
+    public ResponseEntity<PagedResponse<CategoryResponse>> getActiveCategories(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(categoryService.getActiveCategories(pageable), page));
     }
 
     @GetMapping("/exists/{name}")

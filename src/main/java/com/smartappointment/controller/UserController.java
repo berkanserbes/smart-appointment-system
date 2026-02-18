@@ -1,8 +1,8 @@
 package com.smartappointment.controller;
 
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -12,10 +12,12 @@ import com.smartappointment.config.swagger.ApiResponseAnnotations.DeleteResponse
 import com.smartappointment.config.swagger.ApiResponseAnnotations.GetResponses;
 import com.smartappointment.config.swagger.ApiResponseAnnotations.StandardResponses;
 import com.smartappointment.config.swagger.ApiResponseAnnotations.UpdateResponses;
+import com.smartappointment.dto.common.PagedResponse;
 import com.smartappointment.dto.user.requests.ChangePasswordRequest;
 import com.smartappointment.dto.user.requests.UpdateUserRequest;
 import com.smartappointment.dto.user.responses.UserResponse;
 import com.smartappointment.service.interfaces.IUserService;
+import com.smartappointment.util.PaginationUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,48 +40,69 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all users", description = "Retrieves all users including inactive ones (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<PagedResponse<UserResponse>> getAllUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(userService.getAllUsers(pageable), page));
     }
 
     @GetMapping("/active")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get active users", description = "Retrieves only active users (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<UserResponse>> getActiveUsers() {
-        return ResponseEntity.ok(userService.getActiveUsers());
+    public ResponseEntity<PagedResponse<UserResponse>> getActiveUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(userService.getActiveUsers(pageable), page));
     }
 
     @GetMapping("/inactive")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get inactive users", description = "Retrieves only inactive users (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<UserResponse>> getInactiveUsers() {
-        return ResponseEntity.ok(userService.getInactiveUsers());
+    public ResponseEntity<PagedResponse<UserResponse>> getInactiveUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(userService.getInactiveUsers(pageable), page));
     }
 
     @GetMapping("/role/{role}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get users by role", description = "Retrieves all users with a specific role (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<UserResponse>> getUsersByRole(@PathVariable String role) {
-        return ResponseEntity.ok(userService.getUsersByRole(role));
+    public ResponseEntity<PagedResponse<UserResponse>> getUsersByRole(
+            @PathVariable String role,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(userService.getUsersByRole(role, pageable), page));
     }
 
     @GetMapping("/role/{role}/active")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get active users by role", description = "Retrieves only active users with a specific role (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<UserResponse>> getActiveUsersByRole(@PathVariable String role) {
-        return ResponseEntity.ok(userService.getActiveUsersByRole(role));
+    public ResponseEntity<PagedResponse<UserResponse>> getActiveUsersByRole(
+            @PathVariable String role,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(userService.getActiveUsersByRole(role, pageable), page));
     }
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Search users by name", description = "Searches users by name keyword (case-insensitive, Admin only)")
     @StandardResponses
-    public ResponseEntity<List<UserResponse>> searchUsersByName(@RequestParam String keyword) {
-        return ResponseEntity.ok(userService.searchUsersByName(keyword));
+    public ResponseEntity<PagedResponse<UserResponse>> searchUsersByName(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        Pageable pageable = PaginationUtils.toPageable(page, pageSize);
+        return ResponseEntity.ok(PagedResponse.of(userService.searchUsersByName(keyword, pageable), page));
     }
 
     @GetMapping("/{id}")

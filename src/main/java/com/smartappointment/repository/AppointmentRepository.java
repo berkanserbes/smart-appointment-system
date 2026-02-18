@@ -3,6 +3,8 @@ package com.smartappointment.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,19 +18,21 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
         // ==================== User-based queries ====================
 
-        List<Appointment> findByUserIdOrderByStartTimeDesc(Long userId);
+        Page<Appointment> findByUserIdOrderByStartTimeDesc(Long userId, Pageable pageable);
 
-        List<Appointment> findByUserIdAndStatus(Long userId, AppointmentStatus status);
+        Page<Appointment> findByUserIdAndStatus(Long userId, AppointmentStatus status, Pageable pageable);
 
         List<Appointment> findByUserIdAndStatusNot(Long userId, AppointmentStatus status);
 
         List<Appointment> findByUserIdAndStatusIn(Long userId, List<AppointmentStatus> statuses);
 
-        @Query("SELECT a FROM Appointment a WHERE a.user.id = :userId AND a.startTime >= :now ORDER BY a.startTime ASC")
-        List<Appointment> findUpcomingByUserId(@Param("userId") Long userId, @Param("now") LocalDateTime now);
+        @Query(value = "SELECT a FROM Appointment a WHERE a.user.id = :userId AND a.startTime >= :now ORDER BY a.startTime ASC",
+                countQuery = "SELECT count(a) FROM Appointment a WHERE a.user.id = :userId AND a.startTime >= :now")
+        Page<Appointment> findUpcomingByUserId(@Param("userId") Long userId, @Param("now") LocalDateTime now, Pageable pageable);
 
-        @Query("SELECT a FROM Appointment a WHERE a.user.id = :userId AND a.endTime < :now ORDER BY a.startTime DESC")
-        List<Appointment> findPastByUserId(@Param("userId") Long userId, @Param("now") LocalDateTime now);
+        @Query(value = "SELECT a FROM Appointment a WHERE a.user.id = :userId AND a.endTime < :now ORDER BY a.startTime DESC",
+                countQuery = "SELECT count(a) FROM Appointment a WHERE a.user.id = :userId AND a.endTime < :now")
+        Page<Appointment> findPastByUserId(@Param("userId") Long userId, @Param("now") LocalDateTime now, Pageable pageable);
 
         long countByUserId(Long userId);
 
@@ -36,32 +40,33 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
         // ==================== Provider-based queries ====================
 
-        List<Appointment> findByServiceProviderIdOrderByStartTimeDesc(Long providerId);
+        Page<Appointment> findByServiceProviderIdOrderByStartTimeDesc(Long providerId, Pageable pageable);
 
         List<Appointment> findByServiceProviderIdAndStatus(Long providerId, AppointmentStatus status);
 
-        @Query("SELECT a FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime >= :now AND a.status IN ('SCHEDULED', 'CONFIRMED') ORDER BY a.startTime ASC")
-        List<Appointment> findUpcomingByProviderId(@Param("providerId") Long providerId,
-                        @Param("now") LocalDateTime now);
+        @Query(value = "SELECT a FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime >= :now AND a.status IN ('SCHEDULED', 'CONFIRMED') ORDER BY a.startTime ASC",
+                countQuery = "SELECT count(a) FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime >= :now AND a.status IN ('SCHEDULED', 'CONFIRMED')")
+        Page<Appointment> findUpcomingByProviderId(@Param("providerId") Long providerId, @Param("now") LocalDateTime now, Pageable pageable);
 
         long countByServiceProviderId(Long providerId);
 
         // ==================== Location-based queries ====================
 
-        List<Appointment> findByLocationId(Long locationId);
+        Page<Appointment> findByLocationId(Long locationId, Pageable pageable);
 
         List<Appointment> findByLocationIdAndStartTimeBetween(Long locationId, LocalDateTime start, LocalDateTime end);
 
         // ==================== Status-based queries ====================
 
-        List<Appointment> findByStatus(AppointmentStatus status);
+        Page<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);
 
         long countByStatus(AppointmentStatus status);
 
         // ==================== Date range & reporting queries ====================
 
-        @Query("SELECT a FROM Appointment a WHERE a.startTime BETWEEN :start AND :end ORDER BY a.startTime")
-        List<Appointment> findByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+        @Query(value = "SELECT a FROM Appointment a WHERE a.startTime BETWEEN :start AND :end ORDER BY a.startTime",
+                countQuery = "SELECT count(a) FROM Appointment a WHERE a.startTime BETWEEN :start AND :end")
+        Page<Appointment> findByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
         long countByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 
@@ -71,11 +76,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                         @Param("end") LocalDateTime end,
                         @Param("status") AppointmentStatus status);
 
-        @Query("SELECT a FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime BETWEEN :start AND :end ORDER BY a.startTime")
-        List<Appointment> findByProviderIdAndDateRange(
+        @Query(value = "SELECT a FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime BETWEEN :start AND :end ORDER BY a.startTime",
+                countQuery = "SELECT count(a) FROM Appointment a WHERE a.serviceProvider.id = :providerId AND a.startTime BETWEEN :start AND :end")
+        Page<Appointment> findByProviderIdAndDateRange(
                         @Param("providerId") Long providerId,
                         @Param("start") LocalDateTime start,
-                        @Param("end") LocalDateTime end);
+                        @Param("end") LocalDateTime end,
+                        Pageable pageable);
 
         long countByServiceProviderIdAndStartTimeBetween(Long providerId, LocalDateTime start, LocalDateTime end);
 

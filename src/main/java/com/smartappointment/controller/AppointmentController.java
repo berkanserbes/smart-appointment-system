@@ -1,9 +1,10 @@
 package com.smartappointment.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
+import com.smartappointment.dto.common.PagedResponse;
+import com.smartappointment.util.PaginationUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,31 +54,46 @@ public class AppointmentController {
     @GetMapping
     @Operation(summary = "Get current user's appointments")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getMyAppointments(Authentication authentication) {
-        return ResponseEntity.ok(appointmentService.getUserAppointments(authentication.getName()));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getMyAppointments(
+            Authentication authentication,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                appointmentService.getUserAppointments(authentication.getName(), PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/me/status")
     @Operation(summary = "Get current user's appointments by status")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getMyAppointmentsByStatus(
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getMyAppointmentsByStatus(
             Authentication authentication,
-            @RequestParam AppointmentStatus status) {
-        return ResponseEntity.ok(appointmentService.getUserAppointmentsByStatus(authentication.getName(), status));
+            @RequestParam AppointmentStatus status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                appointmentService.getUserAppointmentsByStatus(authentication.getName(), status, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/me/upcoming")
     @Operation(summary = "Get current user's upcoming appointments")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getMyUpcomingAppointments(Authentication authentication) {
-        return ResponseEntity.ok(appointmentService.getUpcomingUserAppointments(authentication.getName()));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getMyUpcomingAppointments(
+            Authentication authentication,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                appointmentService.getUpcomingUserAppointments(authentication.getName(), PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/me/past")
     @Operation(summary = "Get current user's past appointments")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getMyPastAppointments(Authentication authentication) {
-        return ResponseEntity.ok(appointmentService.getPastUserAppointments(authentication.getName()));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getMyPastAppointments(
+            Authentication authentication,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                appointmentService.getPastUserAppointments(authentication.getName(), PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/me/count")
@@ -101,61 +117,80 @@ public class AppointmentController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all appointments (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getAllAppointments() {
-        return ResponseEntity.ok(appointmentService.getAllAppointments());
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getAllAppointments(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(appointmentService.getAllAppointments(PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/status")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get appointments by status (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getAppointmentsByStatus(@RequestParam AppointmentStatus status) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByStatus(status));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getAppointmentsByStatus(
+            @RequestParam AppointmentStatus status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(appointmentService.getAppointmentsByStatus(status, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/date-range")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get appointments by date range (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getAppointmentsByDateRange(
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getAppointmentsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(appointmentService.getAppointmentsByDateRange(start, end));
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(appointmentService.getAppointmentsByDateRange(start, end, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/provider/{providerId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get provider appointments (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getProviderAppointments(@PathVariable Long providerId) {
-        return ResponseEntity.ok(appointmentService.getProviderAppointments(providerId));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getProviderAppointments(
+            @PathVariable Long providerId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(appointmentService.getProviderAppointments(providerId, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/provider/{providerId}/upcoming")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get provider upcoming appointments (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getUpcomingProviderAppointments(@PathVariable Long providerId) {
-        return ResponseEntity.ok(appointmentService.getUpcomingProviderAppointments(providerId));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getUpcomingProviderAppointments(
+            @PathVariable Long providerId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(appointmentService.getUpcomingProviderAppointments(providerId, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/provider/{providerId}/date-range")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get provider appointments by date range (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getProviderAppointmentsByDateRange(
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getProviderAppointmentsByDateRange(
             @PathVariable Long providerId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(appointmentService.getProviderAppointmentsByDateRange(providerId, start, end));
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(
+                appointmentService.getProviderAppointmentsByDateRange(providerId, start, end, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @GetMapping("/location/{locationId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get location appointments (Admin only)")
     @StandardResponses
-    public ResponseEntity<List<AppointmentResponse>> getLocationAppointments(@PathVariable Long locationId) {
-        return ResponseEntity.ok(appointmentService.getLocationAppointments(locationId));
+    public ResponseEntity<PagedResponse<AppointmentResponse>> getLocationAppointments(
+            @PathVariable Long locationId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ResponseEntity.ok(PagedResponse.of(appointmentService.getLocationAppointments(locationId, PaginationUtils.toPageable(page, pageSize)), page));
     }
 
     @PutMapping("/{id}")

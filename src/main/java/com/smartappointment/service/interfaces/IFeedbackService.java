@@ -1,10 +1,11 @@
 package com.smartappointment.service.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.smartappointment.dto.feedback.requests.CreateFeedbackRequest;
 import com.smartappointment.dto.feedback.requests.UpdateFeedbackRequest;
 import com.smartappointment.dto.feedback.responses.FeedbackResponse;
-
-import java.util.List;
 
 public interface IFeedbackService {
 
@@ -14,11 +15,11 @@ public interface IFeedbackService {
 
     FeedbackResponse getFeedbackByAppointment(Long appointmentId);
 
-    List<FeedbackResponse> getUserFeedbacks(String userEmail);
+    Page<FeedbackResponse> getUserFeedbacks(String userEmail, Pageable pageable);
 
-    List<FeedbackResponse> getFeedbacksByProviderId(Long providerId);
+    Page<FeedbackResponse> getFeedbacksByProviderId(Long providerId, Pageable pageable);
 
-    List<FeedbackResponse> getFeedbacksByMinRating(int minRating);
+    Page<FeedbackResponse> getFeedbacksByMinRating(int minRating, Pageable pageable);
 
     Double getAverageRatingByProviderId(Long providerId);
 
