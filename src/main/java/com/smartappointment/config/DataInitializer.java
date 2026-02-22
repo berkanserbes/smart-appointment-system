@@ -21,12 +21,10 @@ public class DataInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
-    // Maps to ADMIN_EMAIL env variable via Spring relaxed binding
-    @Value("${admin.email:admin@smartappointment.com}")
+    @Value("${ADMIN_EMAIL:admin@smartappointment.com}")
     private String adminEmail;
 
-    // Maps to ADMIN_PASSWORD env variable — no default, must be set explicitly
-    @Value("${admin.password}")
+    @Value("${ADMIN_PASSWORD}")
     private String adminPassword;
 
     @Bean
