@@ -39,9 +39,9 @@
 <td width="50%">
 
 ### 🚀 Performance & Scalability
-- Redis caching layer
-- Optimized database queries
-- Horizontal scaling ready
+- Redis caching layer with graceful fallback
+- Scheduled background task processing
+- Email notification delivery via SMTP
 - Docker containerization
 
 ### 📝 Audit & Compliance
@@ -89,8 +89,8 @@ cp .env.example .env.development
 docker-compose --env-file .env.development up --build
 
 # 4. Access the application
-# API: http://localhost:8080
-# Swagger UI: http://localhost:8080/swagger-ui.html
+API: http://localhost:8080
+Swagger UI: http://localhost:8080/swagger-ui.html
 ```
 
 ### 💻 Local Development
@@ -296,27 +296,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
-
-- Spring Boot team for the amazing framework
-- PostgreSQL community for the robust database
-- Redis team for the blazing-fast cache
-- All contributors who help improve this project
-
----
-
-## 📧 Contact & Support
-
-- 📫 **Issues:** [GitHub Issues](https://github.com/yourusername/smart-appointment-system/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/yourusername/smart-appointment-system/discussions)
-- 📖 **Documentation:** [Project Wiki](https://github.com/yourusername/smart-appointment-system/wiki)
-
----
-
 <div align="center">
 
 ### ⭐ Star this repository if you find it helpful!
-
-Made with ❤️ by the Smart Appointment System Team
 
 </div>
