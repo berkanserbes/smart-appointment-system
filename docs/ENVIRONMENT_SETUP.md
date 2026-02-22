@@ -39,6 +39,10 @@ MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=your_email@gmail.com
 MAIL_PASSWORD=your_app_password
+
+# Admin Seed User (created automatically on first startup)
+ADMIN_EMAIL=admin@smartappointment.com
+ADMIN_PASSWORD=your_admin_password
 ```
 
 ### 3. Run Application
@@ -75,6 +79,8 @@ export $(cat .env.development | xargs) && mvn spring-boot:run
 | MAIL_PORT | SMTP port | 587 |
 | MAIL_USERNAME | Email address | - |
 | MAIL_PASSWORD | Email app password | - |
+| ADMIN_EMAIL | Admin seed user email | admin@smartappointment.com |
+| ADMIN_PASSWORD | Admin seed user password | - |
 
 ## Security Notes
 
