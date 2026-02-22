@@ -11,7 +11,7 @@
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Tech Stack](#-tech-stack) • [Contributing](#-contributing)
+[Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Tech Stack](#tech-stack) • [Contributing](#-contributing)
 
 </div>
 
@@ -116,13 +116,10 @@ open http://localhost:8080/swagger-ui.html
 | 🗄️ [Database Schema](docs/DATABASE_SCHEMA.md) | Complete database structure and relationships |
 | 🐳 [Docker Guide](docs/DOCKER_GUIDE.md) | Docker setup and commands |
 | ⚙️ [Environment Setup](docs/ENVIRONMENT_SETUP.md) | Configuration and environment variables |
-| 🔧 [Redis Cache Setup](REDIS_CACHE_SETUP.md) | Caching configuration and usage |
 | 🤝 [Contributing](CONTRIBUTING.md) | How to contribute to the project |
-| 🚀 [Future Features](FUTURE_FEATURES.md) | Planned enhancements and roadmap |
-
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend Framework
 <p>
