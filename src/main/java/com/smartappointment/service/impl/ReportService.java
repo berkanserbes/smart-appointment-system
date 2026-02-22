@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.smartappointment.dto.report.responses.ProviderReportResponse;
@@ -34,6 +35,7 @@ public class ReportService implements IReportService {
     }
 
     @Override
+    @Cacheable(value = "reports", key = "'dashboard'")
     public ReportResponse getDashboardOverview() {
         long totalAppointments = appointmentRepository.count();
 
@@ -52,6 +54,7 @@ public class ReportService implements IReportService {
     }
 
     @Override
+    @Cacheable(value = "reports", key = "'daily'")
     public ReportResponse getDailyReport() {
         LocalDateTime start = LocalDate.now().atStartOfDay();
         LocalDateTime end = LocalDate.now().atTime(LocalTime.MAX);
@@ -59,6 +62,7 @@ public class ReportService implements IReportService {
     }
 
     @Override
+    @Cacheable(value = "reports", key = "'weekly'")
     public ReportResponse getWeeklyReport() {
         LocalDateTime start = LocalDate.now().minusDays(7).atStartOfDay();
         LocalDateTime end = LocalDate.now().atTime(LocalTime.MAX);
@@ -66,6 +70,7 @@ public class ReportService implements IReportService {
     }
 
     @Override
+    @Cacheable(value = "reports", key = "'monthly'")
     public ReportResponse getMonthlyReport() {
         LocalDateTime start = LocalDate.now().withDayOfMonth(1).atStartOfDay();
         LocalDateTime end = LocalDate.now().atTime(LocalTime.MAX);

@@ -1,5 +1,7 @@
 package com.smartappointment.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class LocationService implements ILocationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "locations", allEntries = true)
     public LocationResponse createLocation(CreateLocationRequest request) {
         if (locationRepository.existsByNameAndCity(request.name(), request.city())) {
             throw new BadRequestException(
@@ -45,11 +48,13 @@ public class LocationService implements ILocationService {
     // ==================== GET OPERATIONS ====================
 
     @Override
+    @Cacheable(value = "locations", key = "'all:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<LocationResponse> getAllLocations(Pageable pageable) {
         return locationRepository.findAll(pageable).map(locationMapper::toResponse);
     }
 
     @Override
+    @Cacheable(value = "locations", key = "'active:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<LocationResponse> getActiveLocations(Pageable pageable) {
         return locationRepository.findByActiveTrue(pageable).map(locationMapper::toResponse);
     }
@@ -60,12 +65,14 @@ public class LocationService implements ILocationService {
     }
 
     @Override
+    @Cacheable(value = "locations", key = "'id:' + #id")
     public LocationResponse getLocationById(Long id) {
         Location location = findLocationOrThrow(id);
         return locationMapper.toResponse(location);
     }
 
     @Override
+    @Cacheable(value = "locations", key = "'city:' + #city + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<LocationResponse> getLocationsByCity(String city, Pageable pageable) {
         return locationRepository.findByCity(city, pageable).map(locationMapper::toResponse);
     }
@@ -89,6 +96,7 @@ public class LocationService implements ILocationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "locations", allEntries = true)
     public LocationResponse updateLocation(Long id, UpdateLocationRequest request) {
         Location location = findLocationOrThrow(id);
         locationMapper.updateEntityFromRequest(location, request);
@@ -101,6 +109,7 @@ public class LocationService implements ILocationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "locations", allEntries = true)
     public void activateLocation(Long id) {
         Location location = findLocationOrThrow(id);
         location.setActive(true);
@@ -111,6 +120,7 @@ public class LocationService implements ILocationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "locations", allEntries = true)
     public void softDeleteLocation(Long id) {
         Location location = findLocationOrThrow(id);
         location.setActive(false);
@@ -119,6 +129,7 @@ public class LocationService implements ILocationService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "locations", allEntries = true)
     public void hardDeleteLocation(Long id) {
         Location location = findLocationOrThrow(id);
         locationRepository.delete(location);

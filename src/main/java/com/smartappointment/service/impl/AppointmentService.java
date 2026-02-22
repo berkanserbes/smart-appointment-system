@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -55,7 +57,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public AppointmentResponse createAppointment(String userEmail, CreateAppointmentRequest request) {
         User user = findUserByEmailOrThrow(userEmail);
         ServiceProvider provider = findProviderOrThrow(request.serviceProviderId());
@@ -87,6 +92,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Cacheable(value = "appointments", key = "'user:' + #userEmail + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<AppointmentResponse> getUserAppointments(String userEmail, Pageable pageable) {
         User user = findUserByEmailOrThrow(userEmail);
         return appointmentRepository.findByUserIdOrderByStartTimeDesc(user.getId(), pageable)
@@ -94,19 +100,24 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Cacheable(value = "appointments", key = "'id:' + #id")
     public AppointmentResponse getAppointmentById(Long id) {
         Appointment appointment = findAppointmentOrThrow(id);
         return appointmentMapper.toResponse(appointment);
     }
 
     @Override
+    @Cacheable(value = "appointments", key = "'all:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<AppointmentResponse> getAllAppointments(Pageable pageable) {
         return appointmentRepository.findAll(pageable).map(appointmentMapper::toResponse);
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public AppointmentResponse updateAppointment(Long id, UpdateAppointmentRequest request) {
         Appointment appointment = findAppointmentOrThrow(id);
 
@@ -150,7 +161,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public AppointmentResponse cancelAppointment(Long id, String reason) {
         Appointment appointment = findAppointmentOrThrow(id);
 
@@ -173,7 +187,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public AppointmentResponse completeAppointment(Long id) {
         Appointment appointment = findAppointmentOrThrow(id);
 
@@ -190,7 +207,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public void deleteAppointment(Long id) {
         Appointment appointment = findAppointmentOrThrow(id);
         appointmentRepository.delete(appointment);
@@ -199,7 +219,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public AppointmentResponse confirmAppointment(Long id) {
         Appointment appointment = findAppointmentOrThrow(id);
 
@@ -216,7 +239,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public AppointmentResponse rejectAppointment(Long id, String reason) {
         Appointment appointment = findAppointmentOrThrow(id);
 
@@ -236,7 +262,10 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "appointments", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "appointments", allEntries = true),
+            @CacheEvict(value = "reports", allEntries = true)
+    })
     public void markMissedAppointments() {
         List<Appointment> missedAppointments = appointmentRepository.findMissedAppointments(LocalDateTime.now());
         if (missedAppointments.isEmpty()) {
@@ -249,6 +278,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Cacheable(value = "appointments", key = "'status:' + #status + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<AppointmentResponse> getAppointmentsByStatus(AppointmentStatus status, Pageable pageable) {
         return appointmentRepository.findByStatus(status, pageable).map(appointmentMapper::toResponse);
     }
@@ -284,6 +314,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Cacheable(value = "appointments", key = "'provider:' + #providerId + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<AppointmentResponse> getProviderAppointments(Long providerId, Pageable pageable) {
         findProviderOrThrow(providerId);
         return appointmentRepository.findByServiceProviderIdOrderByStartTimeDesc(providerId, pageable).map(appointmentMapper::toResponse);
@@ -304,6 +335,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Cacheable(value = "appointments", key = "'location:' + #locationId + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<AppointmentResponse> getLocationAppointments(Long locationId, Pageable pageable) {
         findLocationOrThrow(locationId);
         return appointmentRepository.findByLocationId(locationId, pageable).map(appointmentMapper::toResponse);

@@ -1,5 +1,7 @@
 package com.smartappointment.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse createCategory(CreateCategoryRequest request) {
         if (categoryRepository.existsByNameIgnoreCase(request.name())) {
             throw new BadRequestException("Category already exists: " + request.name());
@@ -40,11 +43,13 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    @Cacheable(value = "categories", key = "'all:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize + ':sort:' + #pageable.sort.toString()")
     public Page<CategoryResponse> getAllCategories(Pageable pageable) {
         return categoryRepository.findAll(pageable).map(categoryMapper::toResponse);
     }
 
     @Override
+    @Cacheable(value = "categories", key = "'id_' + #id")
     public CategoryResponse getCategoryById(Long id) {
         Category category = findCategoryOrThrow(id);
         return categoryMapper.toResponse(category);
@@ -52,6 +57,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse updateCategory(Long id, UpdateCategoryRequest request) {
         Category category = findCategoryOrThrow(id);
         categoryMapper.updateEntityFromRequest(category, request);
@@ -79,6 +85,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public void softDeleteCategory(Long id) {
         Category category = findCategoryOrThrow(id);
         category.setActive(false);
@@ -87,6 +94,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public void hardDeleteCategory(Long id) {
         Category category = findCategoryOrThrow(id);
         categoryRepository.delete(category);

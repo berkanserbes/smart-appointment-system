@@ -1,5 +1,7 @@
 package com.smartappointment.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ public class ServiceProviderService implements IServiceProviderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "providers", allEntries = true)
     public ServiceProviderResponse createProvider(CreateServiceProviderRequest request) {
         if (request.email() != null && providerRepository.existsByEmail(request.email())) {
             throw new BadRequestException("Provider with this email already exists: " + request.email());
@@ -57,11 +60,13 @@ public class ServiceProviderService implements IServiceProviderService {
     // ==================== GET OPERATIONS ====================
 
     @Override
+    @Cacheable(value = "providers", key = "'all:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<ServiceProviderSummaryResponse> getAllProviders(Pageable pageable) {
         return providerRepository.findAll(pageable).map(serviceProviderMapper::toSummaryResponse);
     }
 
     @Override
+    @Cacheable(value = "providers", key = "'active:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<ServiceProviderSummaryResponse> getActiveProviders(Pageable pageable) {
         return providerRepository.findByActiveTrue(pageable).map(serviceProviderMapper::toSummaryResponse);
     }
@@ -72,12 +77,14 @@ public class ServiceProviderService implements IServiceProviderService {
     }
 
     @Override
+    @Cacheable(value = "providers", key = "'id:' + #id")
     public ServiceProviderDetailResponse getProviderById(Long id) {
         ServiceProvider provider = findProviderOrThrow(id);
         return serviceProviderMapper.toDetailResponse(provider, feedbackRepository.getAverageRatingByProviderId(provider.getId()));
     }
 
     @Override
+    @Cacheable(value = "providers", key = "'category:' + #categoryId + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<ServiceProviderSummaryResponse> getProvidersByCategory(Long categoryId, Pageable pageable) {
         return providerRepository.findByCategoryId(categoryId, pageable).map(serviceProviderMapper::toSummaryResponse);
     }
@@ -101,6 +108,7 @@ public class ServiceProviderService implements IServiceProviderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "providers", allEntries = true)
     public ServiceProviderResponse updateProvider(Long id, UpdateServiceProviderRequest request) {
         ServiceProvider provider = findProviderOrThrow(id);
 
@@ -119,6 +127,7 @@ public class ServiceProviderService implements IServiceProviderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "providers", allEntries = true)
     public void activateProvider(Long id) {
         ServiceProvider provider = findProviderOrThrow(id);
         provider.setActive(true);
@@ -129,6 +138,7 @@ public class ServiceProviderService implements IServiceProviderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "providers", allEntries = true)
     public void softDeleteProvider(Long id) {
         ServiceProvider provider = findProviderOrThrow(id);
         provider.setActive(false);
@@ -137,6 +147,7 @@ public class ServiceProviderService implements IServiceProviderService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "providers", allEntries = true)
     public void hardDeleteProvider(Long id) {
         ServiceProvider provider = findProviderOrThrow(id);
         providerRepository.delete(provider);

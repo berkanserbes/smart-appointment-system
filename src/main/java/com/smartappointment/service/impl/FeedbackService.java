@@ -1,5 +1,8 @@
 package com.smartappointment.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,10 @@ public class FeedbackService implements IFeedbackService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "feedbacks", allEntries = true),
+            @CacheEvict(value = "providers", allEntries = true)
+    })
     public FeedbackResponse createFeedback(String userEmail, CreateFeedbackRequest request) {
         User user = findUserByEmailOrThrow(userEmail);
 
@@ -67,12 +74,14 @@ public class FeedbackService implements IFeedbackService {
     // ==================== GET OPERATIONS ====================
 
     @Override
+    @Cacheable(value = "feedbacks", key = "'id:' + #id")
     public FeedbackResponse getFeedbackById(Long id) {
         Feedback feedback = findFeedbackOrThrow(id);
         return feedbackMapper.toResponse(feedback);
     }
 
     @Override
+    @Cacheable(value = "feedbacks", key = "'appointment:' + #appointmentId")
     public FeedbackResponse getFeedbackByAppointment(Long appointmentId) {
         Feedback feedback = feedbackRepository.findByAppointmentId(appointmentId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -87,6 +96,7 @@ public class FeedbackService implements IFeedbackService {
     }
 
     @Override
+    @Cacheable(value = "feedbacks", key = "'provider:' + #providerId + ':p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<FeedbackResponse> getFeedbacksByProviderId(Long providerId, Pageable pageable) {
         return feedbackRepository.findByProviderId(providerId, pageable).map(feedbackMapper::toResponse);
     }
@@ -115,6 +125,10 @@ public class FeedbackService implements IFeedbackService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "feedbacks", allEntries = true),
+            @CacheEvict(value = "providers", allEntries = true)
+    })
     public FeedbackResponse updateFeedback(Long id, String userEmail, UpdateFeedbackRequest request) {
         Feedback feedback = findFeedbackOrThrow(id);
 
@@ -132,6 +146,10 @@ public class FeedbackService implements IFeedbackService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "feedbacks", allEntries = true),
+            @CacheEvict(value = "providers", allEntries = true)
+    })
     public void deleteFeedback(Long id) {
         Feedback feedback = findFeedbackOrThrow(id);
         feedbackRepository.delete(feedback);

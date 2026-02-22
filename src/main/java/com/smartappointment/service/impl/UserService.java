@@ -1,5 +1,7 @@
 package com.smartappointment.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,16 +35,19 @@ public class UserService implements IUserService {
     // ==================== GET OPERATIONS ====================
 
     @Override
+    @Cacheable(value = "users", key = "'all:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<UserResponse> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::toResponse);
     }
 
     @Override
+    @Cacheable(value = "users", key = "'active:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<UserResponse> getActiveUsers(Pageable pageable) {
         return userRepository.findByActiveTrue(pageable).map(userMapper::toResponse);
     }
 
     @Override
+    @Cacheable(value = "users", key = "'inactive:p:' + #pageable.pageNumber + ':s:' + #pageable.pageSize")
     public Page<UserResponse> getInactiveUsers(Pageable pageable) {
         return userRepository.findByActiveFalse(pageable).map(userMapper::toResponse);
     }
@@ -67,12 +72,14 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "'id:' + #id")
     public UserResponse getUserById(Long id) {
         User user = findUserOrThrow(id);
         return userMapper.toResponse(user);
     }
 
     @Override
+    @Cacheable(value = "users", key = "'email:' + #email")
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
@@ -83,6 +90,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = findUserOrThrow(id);
 
@@ -117,6 +125,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     public void activateUser(Long id) {
         User user = findUserOrThrow(id);
         user.setActive(true);
@@ -125,6 +134,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     public void deactivateUser(Long id) {
         User user = findUserOrThrow(id);
         user.setActive(false);
@@ -135,6 +145,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "users", allEntries = true)
     public void hardDeleteUser(Long id) {
         User user = findUserOrThrow(id);
         userRepository.delete(user);
