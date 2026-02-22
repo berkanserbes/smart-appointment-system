@@ -21,6 +21,7 @@ import com.smartappointment.model.enums.ReminderType;
 import com.smartappointment.repository.AppointmentRepository;
 import com.smartappointment.repository.ReminderRepository;
 import com.smartappointment.service.interfaces.IReminderService;
+import com.smartappointment.service.interfaces.ISender;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,13 +32,16 @@ public class ReminderService implements IReminderService {
     private final ReminderRepository reminderRepository;
     private final AppointmentRepository appointmentRepository;
     private final ReminderMapper reminderMapper;
+    private final ISender sender;
 
     public ReminderService(ReminderRepository reminderRepository,
             AppointmentRepository appointmentRepository,
-            ReminderMapper reminderMapper) {
+            ReminderMapper reminderMapper,
+            ISender sender) {
         this.reminderRepository = reminderRepository;
         this.appointmentRepository = appointmentRepository;
         this.reminderMapper = reminderMapper;
+        this.sender = sender;
     }
 
     // ==================== CREATE ====================
@@ -124,17 +128,18 @@ public class ReminderService implements IReminderService {
     private void sendReminder(Reminder reminder) {
         String appointmentInfo = reminder.getAppointment().getServiceProvider().getName() +
                 " at " + reminder.getAppointment().getStartTime();
+        String userEmail = reminder.getAppointment().getUser().getEmail();
 
         switch (reminder.getType()) {
-            case EMAIL -> log.info("[EMAIL] To: {}, Message: {}, Appointment: {}",
-                    reminder.getAppointment().getUser().getEmail(),
-                    reminder.getMessage(),
-                    appointmentInfo);
+            case EMAIL -> {
+                String subject = "Appointment Reminder: " + appointmentInfo;
+                sender.send(userEmail, subject, reminder.getMessage());
+            }
             case SMS -> log.info("[SMS] To: {}, Message: {}",
                     reminder.getAppointment().getUser().getPhone(),
                     reminder.getMessage());
             case IN_APP -> log.info("[IN_APP] User: {}, Message: {}",
-                    reminder.getAppointment().getUser().getEmail(),
+                    userEmail,
                     reminder.getMessage());
         }
     }
