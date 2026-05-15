@@ -51,6 +51,7 @@ class AppointmentControllerTest extends BaseIntegrationTest {
                 .get("/appointments")
                 .then()
                 .statusCode(200)
+                .time(lessThan(MAX_RESPONSE_TIME_MS), RESPONSE_TIME_UNIT)
                 .body("success", is(true))
                 .body("data.content", notNullValue())
                 .body("data.page", equalTo(1))
