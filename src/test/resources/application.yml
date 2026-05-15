@@ -1,0 +1,66 @@
+# Test Environment Configuration
+
+server:
+  port: 0  # Random port — @LocalServerPort picks it up
+
+spring:
+  config:
+    import: ""
+
+  # H2 in-memory database replaces PostgreSQL
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;NON_KEYWORDS=VALUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  # Redis: @MockBean in BaseIntegrationTest replaces the real connection factory.
+  # The custom CacheErrorHandler in RedisConfig silently swallows any cache failures,
+  # so business logic continues normally without caching during tests.
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  # Disable mail auto-configuration to avoid SMTP connection attempts
+  mail:
+    host: localhost
+    port: 2525
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+  # Keep autoconfigure exclusions minimal; Redis errors are swallowed by CacheErrorHandler
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+
+# JWT — must be ≥256 bits for HmacSHA256
+jwt:
+  secret: testSecretKeyForIntegrationTestsMustBeAtLeast256BitsLongForHmacSha256AlgorithmRequirement
+  expiration: 86400000  # 24 hours
+
+# Admin seed user — required by DataInitializer (@Value without default)
+ADMIN_EMAIL: admin@smartappointment.com
+ADMIN_PASSWORD: Admin123!
+
+logging:
+  level:
+    root: WARN
+    com.smartappointment: INFO
+    org.springframework.security: WARN
