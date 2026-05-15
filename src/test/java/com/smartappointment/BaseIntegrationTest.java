@@ -10,6 +10,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.concurrent.TimeUnit;
+
 import static io.restassured.RestAssured.given;
 
 /**
@@ -32,6 +34,10 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
+
+    /** Maximum acceptable response time for all API calls under test. */
+    protected static final long MAX_RESPONSE_TIME_MS = 1000L;
+    protected static final TimeUnit RESPONSE_TIME_UNIT = TimeUnit.MILLISECONDS;
 
     @LocalServerPort
     protected int port;

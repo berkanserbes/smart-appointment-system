@@ -145,6 +145,7 @@ class LocationControllerTest extends BaseIntegrationTest {
                 .get("/locations")
                 .then()
                 .statusCode(200)
+                .time(lessThan(MAX_RESPONSE_TIME_MS), RESPONSE_TIME_UNIT)
                 .body("success", is(true))
                 .body("data.content", notNullValue());
     }
